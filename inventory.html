@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.2">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Inventory Scanner&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>:root { --primary:#0066cc; --bg:#f8f9fa; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>background:#fff; margin:0; padding:0; color:#333;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>header {background:var(--primary); color:#fff; padding:1rem; text-align:center;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>main {padding:1rem; max-width:800px; margin:auto;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#reader {width:100%; max-width:500px; margin:1rem auto; display:block;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#result {margin-top:1rem; padding:0.8rem; background:#e9ecef; border-radius:6px; font-weight:bold;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>table {width:100%; border-collapse:collapse; margin-top:1rem;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>th, td {border:1px solid #ddd; padding:0.6rem; text-align:left;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>th {background:#f1f1f1;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.actions button {margin-right:0.4rem; font-size:0.9rem;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.form-row {display:flex; gap:0.5rem; margin-top:1rem; flex-wrap:wrap;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.form-row input, .form-row button {padding:0.5rem; font-size:1rem;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.form-row input {flex:1; min-width:150px;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#exportBtn {margin-top:1rem; background:var(--primary); color:#fff; border:none;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>padding:0.7rem 1.2rem; border-radius:4px; cursor:pointer;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>@media (max-width:600px) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>#reader {height:300px;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Quagga2 for barcode scanning --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;Inventory Scanner&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;main&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="reader"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="result" style="display:none;"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="form-row"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="text" id="barcodeInput" placeholder="Barcode (auto-filled)" readonly&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="text" id="descInput" placeholder="Description"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="number" id="qtyInput" placeholder="Qty" min="1" value="1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button id="addBtn"&gt;Add&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="exportBtn" style="display:none;"&gt;Export CSV&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;table id="inventoryTable" style="display:none;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;thead&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;th&gt;Barcode&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;th&gt;Qty&lt;/th&gt;&lt;th class="actions"&gt;Actions&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/thead&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;tbody&gt;&lt;/tbody&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/table&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- IndexedDB wrapper (Dexie.js) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.jsdelivr.net/npm/dexie@3.2.4/dist/dexie.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ---------- Database ----------</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const db = new Dexie("InventoryDB");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>db.version(1).stores({ items: "++id,barcode,description,quantity" });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ---------- UI Elements ----------</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const resultDiv <span class="Apple-converted-space">  </span>= document.getElementById('result');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const barcodeInp<span class="Apple-converted-space">  </span>= document.getElementById('barcodeInput');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const descInp <span class="Apple-converted-space">    </span>= document.getElementById('descInput');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const qtyInp<span class="Apple-converted-space">      </span>= document.getElementById('qtyInput');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const addBtn<span class="Apple-converted-space">      </span>= document.getElementById('addBtn');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const table <span class="Apple-converted-space">      </span>= document.getElementById('inventoryTable');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const tbody <span class="Apple-converted-space">      </span>= table.querySelector('tbody');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const exportBtn <span class="Apple-converted-space">  </span>= document.getElementById('exportBtn');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ---------- Quagga Scanner ----------</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let lastScanned = null;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>Quagga.init({</p>
+<p class="p1"><span class="Apple-converted-space">      </span>inputStream: {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>name: "Live",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>type: "LiveStream",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>target: document.querySelector('#reader'),</p>
+<p class="p1"><span class="Apple-converted-space">        </span>constraints: {facingMode: "environment"} // rear camera</p>
+<p class="p1"><span class="Apple-converted-space">      </span>},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>frequency: 10,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>decoder: {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>readers: ["ean_reader","upc_reader","code_128_reader","qr_code_reader"]</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}, function(err) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (err) { console.error(err); return; }</p>
+<p class="p1"><span class="Apple-converted-space">      </span>Quagga.start();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>Quagga.onDetected(data =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const code = data.codeResult.code;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (code === lastScanned) return; // debounce</p>
+<p class="p1"><span class="Apple-converted-space">      </span>lastScanned = code;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(() =&gt; lastScanned = null, 1500);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>barcodeInp.value = code;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>resultDiv.textContent = `Scanned: ${code}`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>resultDiv.style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>descInp.focus();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ---------- Add Item ----------</p>
+<p class="p1"><span class="Apple-converted-space">    </span>async function addItem() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const barcode = barcodeInp.value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const desc<span class="Apple-converted-space">    </span>= descInp.value.trim() || "—";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const qty <span class="Apple-converted-space">    </span>= parseInt(qtyInp.value) || 1;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!barcode) { alert("Scan or enter a barcode first."); return; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// upsert (add quantity if exists)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const existing = await db.items.where({barcode}).first();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (existing) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>await db.items.update(existing.id, {quantity: existing.quantity + qty});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>await db.items.add({barcode, description: desc, quantity: qty});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>barcodeInp.value = descInp.value = ""; qtyInp.value = 1;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>resultDiv.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>await renderTable();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>addBtn.onclick = addItem;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ---------- Render Table ----------</p>
+<p class="p1"><span class="Apple-converted-space">    </span>async function renderTable() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const items = await db.items.orderBy('barcode').toArray();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (items.length === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>table.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>exportBtn.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>tbody.innerHTML = "";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>items.forEach(it =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const tr = document.createElement('tr');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>tr.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;td&gt;${escapeHtml(it.barcode)}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;td&gt;${escapeHtml(it.description)}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;td&gt;${it.quantity}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;td class="actions"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button onclick="editQty(${it.id},-1)"&gt;-1&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button onclick="editQty(${it.id},1)"&gt;+1&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button onclick="removeItem(${it.id})" style="color:red;"&gt;Del&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/td&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>tbody.appendChild(tr);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>table.style.display = 'table';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>exportBtn.style.display = 'inline-block';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ---------- Edit / Delete ----------</p>
+<p class="p1"><span class="Apple-converted-space">    </span>window.editQty = async (id, delta) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const rec = await db.items.get(id);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const newQty = rec.quantity + delta;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (newQty &lt;= 0) { if (confirm("Remove item?")) await db.items.delete(id); }</p>
+<p class="p1"><span class="Apple-converted-space">      </span>else await db.items.update(id, {quantity: newQty});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>await renderTable();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>window.removeItem = async (id) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (confirm("Delete this item?")) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>await db.items.delete(id);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>await renderTable();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ---------- Export CSV ----------</p>
+<p class="p1"><span class="Apple-converted-space">    </span>exportBtn.onclick = async () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const items = await db.items.orderBy('barcode').toArray();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>let csv = "Barcode,Description,Quantity\n";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>items.forEach(i =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>csv += `"${i.barcode}","${i.description.replace(/"/g,'""')}",${i.quantity}\n`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const url = URL.createObjectURL(blob);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const a = document.createElement('a');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>a.href = url;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>a.download = `inventory_${new Date().toISOString().slice(0,10)}.csv`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>a.click();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>URL.revokeObjectURL(url);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ---------- Helpers ----------</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function escapeHtml(str) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const div = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>div.textContent = str;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>return div.innerHTML;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Initial render</p>
+<p class="p1"><span class="Apple-converted-space">    </span>renderTable();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
